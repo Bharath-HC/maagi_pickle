@@ -1,0 +1,54 @@
+<footer class="site-footer">
+  <div class="container py-5">
+    <div class="row g-4">
+      <div class="col-lg-4 col-md-6">
+        <img src="{{ url_for('static', filename='images/branding/maagi-logo-dark-bg.webp') }}" alt="Maagi Pickle" height="48" class="mb-3">
+        <p class="footer-muted">Authentic Indian pickles crafted with tradition, quality and passion. Manufactured by Prashanth Home Industries since 2001.</p>
+        <div class="d-flex gap-2">
+          <a href="#" class="social-dot"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="social-dot"><i class="bi bi-instagram"></i></a>
+          <a href="#" class="social-dot"><i class="bi bi-youtube"></i></a>
+        </div>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Shop</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('products.catalog') }}">All Products</a></li>
+          <li><a href="{{ url_for('main.bulk_orders') }}">Bulk Orders</a></li>
+          <li><a href="{{ url_for('main.become_distributor') }}">Become a Distributor</a></li>
+          <li><a href="{{ url_for('main.become_wholesaler') }}">Become a Wholesaler</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Company</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('main.about') }}">Our Story</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Contact Us</a></li>
+          <li><a href="{{ url_for('main.terms') }}">Terms &amp; Conditions</a></li>
+          <li><a href="{{ url_for('main.privacy_policy') }}">Privacy Policy</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Support</h6>
+        <ul class="footer-links">
+          <li><a href="{{ url_for('main.shipping_policy') }}">Shipping Policy</a></li>
+          <li><a href="{{ url_for('main.refund_policy') }}">Refund Policy</a></li>
+          <li><a href="{{ url_for('main.contact') }}">Help Center</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-2 col-md-6">
+        <h6 class="footer-heading">Get Maagi Updates</h6>
+        <form method="post" action="{{ url_for('main.newsletter_subscribe') }}" class="newsletter-form">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+          <input type="email" name="email" class="form-control form-control-sm mb-2" placeholder="Your email" required>
+          <button class="btn btn-sm btn-maagi w-100" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+    <hr class="footer-rule">
+    <div class="d-flex flex-column flex-md-row justify-content-between small footer-muted">
+      <div>&copy; {{ current_year }} {{ company_name }} — Prashanth Home Industries. All rights reserved.</div>
+      <div>Made with care in India.</div>
+    </div>
+  </div>
+</footer>

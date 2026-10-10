@@ -1,0 +1,17 @@
+{% extends "b2b/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Payments</h3>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Order #</th><th>Date</th><th>Method</th><th>Status</th><th>Amount</th><th>Outstanding</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.order_number }}</td><td>{{ o.created_at.strftime('%d %b %Y') }}</td><td>{{ o.payment_method }}</td>
+        <td>{{ o.payment_status }}</td><td>{{ o.total_amount|rupees }}</td><td>{{ o.outstanding|rupees }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

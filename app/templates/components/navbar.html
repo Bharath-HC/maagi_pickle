@@ -1,0 +1,60 @@
+<div class="topbar d-none d-lg-block">
+  <div class="container d-flex justify-content-between align-items-center py-1 small">
+    <div><i class="bi bi-telephone-fill me-1"></i>{{ company_phone }} &nbsp; <i class="bi bi-envelope-fill me-1"></i>{{ company_email }}</div>
+    <div>
+      <a href="{{ url_for('main.become_distributor') }}" class="text-white-50 me-3">Become a Distributor</a>
+      <a href="{{ url_for('main.become_wholesaler') }}" class="text-white-50">Become a Wholesaler</a>
+    </div>
+  </div>
+</div>
+<nav class="navbar navbar-expand-lg main-nav sticky-top">
+  <div class="container">
+    <a class="navbar-brand" href="{{ url_for('main.home') }}">
+      <img src="{{ url_for('static', filename='images/branding/maagi-logo.webp') }}" alt="Maagi Pickle" height="46">
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav" aria-label="Toggle navigation">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="mainNav">
+      <ul class="navbar-nav mx-auto main-nav__links">
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.home') }}">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('products.catalog') }}">Shop</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.about') }}">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.bulk_orders') }}">Bulk Orders</a></li>
+        <li class="nav-item"><a class="nav-link" href="{{ url_for('main.contact') }}">Contact</a></li>
+      </ul>
+      <form class="d-flex search-form me-2" role="search" action="{{ url_for('main.search') }}" method="get">
+        <input class="form-control form-control-sm" type="search" name="q" placeholder="Search pickles..." value="{{ request.args.get('q','') }}">
+        <button class="btn btn-sm btn-maagi-outline" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <div class="d-flex align-items-center gap-2 main-nav__actions">
+        {% if current_user.is_authenticated %}
+          <div class="dropdown">
+            <button class="btn btn-sm btn-light dropdown-toggle" type="button" data-bs-toggle="dropdown">
+              <i class="bi bi-person-circle me-1"></i>{{ current_user.name.split(' ')[0] }}
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" href="{{ url_for(current_user.dashboard_endpoint) }}">Dashboard</a></li>
+              {% if current_user.role == Role.CUSTOMER %}
+              <li><a class="dropdown-item" href="{{ url_for('customer.orders') }}">My Orders</a></li>
+              <li><a class="dropdown-item" href="{{ url_for('customer.wishlist') }}">Wishlist</a></li>
+              {% endif %}
+              <li><a class="dropdown-item" href="{{ url_for('customer.profile') }}">Profile</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a></li>
+            </ul>
+          </div>
+        {% else %}
+          <a href="{{ url_for('auth.login') }}" class="btn btn-sm btn-light">Login</a>
+          <a href="{{ url_for('auth.register') }}" class="btn btn-sm btn-maagi">Register</a>
+        {% endif %}
+        {% if not current_user.is_authenticated or current_user.role == Role.CUSTOMER %}
+        <a href="{{ url_for('cart.view') }}" class="btn btn-sm btn-light position-relative">
+          <i class="bi bi-bag"></i>
+          {% if cart_count %}<span class="cart-badge">{{ cart_count }}</span>{% endif %}
+        </a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</nav>

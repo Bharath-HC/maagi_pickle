@@ -1,0 +1,25 @@
+{% extends "customer/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">My Profile</h3>
+<div class="dash-card" style="max-width:600px;">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="mb-3"><label class="form-label">Email</label><input class="form-control" value="{{ current_user.email }}" disabled></div>
+    <div class="row g-3">
+      <div class="col-md-6">{{ form.name.label(class="form-label") }}{{ form.name(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.phone.label(class="form-label") }}{{ form.phone(class="form-control") }}</div>
+      {% if current_user.role in (Role.DISTRIBUTOR, Role.WHOLESALER) %}
+      <div class="col-md-6">{{ form.company_name.label(class="form-label") }}{{ form.company_name(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.gst_number.label(class="form-label") }}{{ form.gst_number(class="form-control") }}</div>
+      {% endif %}
+      <div class="col-12">{{ form.address.label(class="form-label") }}{{ form.address(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.city.label(class="form-label") }}{{ form.city(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.state.label(class="form-label") }}{{ form.state(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.pincode.label(class="form-label") }}{{ form.pincode(class="form-control") }}</div>
+    </div>
+    <button type="submit" class="btn btn-maagi mt-4">Save Changes</button>
+  </form>
+  <hr>
+  <a href="{{ url_for('auth.change_password') }}">Change Password</a>
+</div>
+{% endblock %}

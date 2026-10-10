@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dash-shell">
+  <button class="dash-sidebar-toggle d-lg-none" id="dashSidebarToggle"><i class="bi bi-list"></i> Menu</button>
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-sidebar__title">My Account</div>
+    <nav class="dash-nav">
+      <a href="{{ url_for('customer.dashboard') }}" class="{{ 'active' if request.endpoint=='customer.dashboard' }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="{{ url_for('customer.orders') }}" class="{{ 'active' if request.endpoint and request.endpoint.startswith('customer.order') }}"><i class="bi bi-box-seam"></i> My Orders</a>
+      <a href="{{ url_for('cart.view') }}"><i class="bi bi-bag"></i> Cart</a>
+      <a href="{{ url_for('customer.wishlist') }}" class="{{ 'active' if request.endpoint=='customer.wishlist' }}"><i class="bi bi-heart"></i> Wishlist</a>
+      <a href="{{ url_for('customer.addresses') }}" class="{{ 'active' if request.endpoint=='customer.addresses' }}"><i class="bi bi-geo-alt"></i> Addresses</a>
+      <a href="{{ url_for('customer.notifications') }}" class="{{ 'active' if request.endpoint=='customer.notifications' }}"><i class="bi bi-bell"></i> Notifications
+        {% if current_user.unread_notifications %}<span class="badge bg-danger ms-1">{{ current_user.unread_notifications }}</span>{% endif %}
+      </a>
+      <a href="{{ url_for('customer.profile') }}" class="{{ 'active' if request.endpoint=='customer.profile' }}"><i class="bi bi-person"></i> Profile</a>
+      <a href="{{ url_for('main.become_distributor') }}"><i class="bi bi-briefcase"></i> Become a Partner</a>
+      <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+  </aside>
+  <div class="dash-main">
+    {% block dash_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

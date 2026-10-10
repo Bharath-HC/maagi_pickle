@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Search{% if q %} — "{{ q }}"{% endif %} — {{ company_name }}{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <h2 class="mb-4">{% if q %}Search results for "{{ q }}"{% else %}Search{% endif %}</h2>
+  <div class="row">
+    <div class="col-lg-3 mb-4">
+      <div class="filter-card">
+        <h6>Categories</h6>
+        <ul class="list-unstyled">
+          <li><a href="{{ url_for('main.search', q=q) }}" class="{{ 'fw-bold' if not category_id }}">All</a></li>
+          {% for c in categories %}
+          <li><a href="{{ url_for('main.search', q=q, category=c.id) }}" class="{{ 'fw-bold' if category_id==c.id }}">{{ c.name }}</a></li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <div class="col-lg-9">
+      {% if products %}
+      <div class="row g-4">
+        {% for product in products %}
+        <div class="col-6 col-md-4">{% include "components/product_card.html" %}</div>
+        {% endfor %}
+      </div>
+      {% include "components/pagination.html" %}
+      {% else %}
+      <p class="text-muted">No products found. Try a different search term.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

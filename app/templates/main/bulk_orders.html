@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Bulk Orders — {{ company_name }}{% endblock %}
+{% block content %}
+<div class="page-header text-center">
+  <div class="container">
+    <h1>Grow Your Business with Maagi</h1>
+    <p>Request a bulk quote for restaurants, hotels, retailers, wholesalers and distributors.</p>
+  </div>
+</div>
+<div class="container py-5">
+  <form method="post" novalidate>
+    {{ form.hidden_tag() }}
+    <h5 class="mb-3">1. Select Products &amp; Quantities</h5>
+    <div class="table-responsive mb-4">
+      <table class="table align-middle data-table">
+        <thead><tr><th>Product</th><th>Pack Size</th><th style="width:140px;">Quantity</th></tr></thead>
+        <tbody>
+          {% for product in products %}
+            {% for v in product.active_variants %}
+            <tr>
+              <td>{{ product.name }}</td>
+              <td>{{ v.label }}</td>
+              <td><input type="number" min="0" class="form-control form-control-sm" name="qty_{{ v.id }}" value="0"></td>
+            </tr>
+            {% endfor %}
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <h5 class="mb-3">2. Your Business Details</h5>
+    <div class="row g-3">
+      <div class="col-md-6">{{ form.name.label(class="form-label") }}{{ form.name(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.company_name.label(class="form-label") }}{{ form.company_name(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.email.label(class="form-label") }}{{ form.email(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.phone.label(class="form-label") }}{{ form.phone(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.gst_number.label(class="form-label") }}{{ form.gst_number(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.expected_delivery_date.label(class="form-label") }}{{ form.expected_delivery_date(class="form-control") }}</div>
+      <div class="col-12">{{ form.delivery_address.label(class="form-label") }}{{ form.delivery_address(class="form-control", rows=2) }}</div>
+      <div class="col-12">{{ form.message.label(class="form-label") }}{{ form.message(class="form-control", rows=3) }}</div>
+    </div>
+    <button type="submit" class="btn btn-maagi btn-lg mt-4">REQUEST BULK QUOTE</button>
+  </form>
+</div>
+{% endblock %}

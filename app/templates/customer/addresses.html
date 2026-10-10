@@ -1,0 +1,41 @@
+{% extends "customer/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">My Addresses</h3>
+<div class="row g-4">
+  {% for a in addresses %}
+  <div class="col-md-6">
+    <div class="dash-card">
+      <h6>{{ a.label }} {% if a.is_default %}<span class="badge bg-success-subtle text-success">Default</span>{% endif %}</h6>
+      <p class="mb-2 small">{{ a.name }}<br>{{ a.line1 }}{% if a.line2 %}, {{ a.line2 }}{% endif %}<br>{{ a.city }}, {{ a.state }} - {{ a.pincode }}<br>Phone: {{ a.phone }}</p>
+      <form method="post" action="{{ url_for('customer.delete_address', address_id=a.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+      </form>
+    </div>
+  </div>
+  {% endfor %}
+  <div class="col-md-6">
+    <div class="dash-card">
+      <h6 class="mb-3">Add New Address</h6>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="row g-2">
+          <div class="col-6">{{ form.label(class="form-control", placeholder="Label") }}</div>
+          <div class="col-6">{{ form.name(class="form-control", placeholder="Recipient Name") }}</div>
+          <div class="col-12">{{ form.phone(class="form-control", placeholder="Phone") }}</div>
+          <div class="col-12">{{ form.line1(class="form-control", placeholder="Address Line 1") }}</div>
+          <div class="col-12">{{ form.line2(class="form-control", placeholder="Address Line 2") }}</div>
+          <div class="col-4">{{ form.city(class="form-control", placeholder="City") }}</div>
+          <div class="col-4">{{ form.state(class="form-control", placeholder="State") }}</div>
+          <div class="col-4">{{ form.pincode(class="form-control", placeholder="Pincode") }}</div>
+          <div class="col-12 form-check">
+            {{ form.is_default(class="form-check-input") }}
+            {{ form.is_default.label(class="form-check-label") }}
+          </div>
+        </div>
+        <button type="submit" class="btn btn-maagi mt-3">Save Address</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Bulk Order Requests</h3>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Ref</th><th>Name</th><th>Company</th><th>Items</th><th>Status</th><th>Update</th></tr></thead>
+    <tbody>
+      {% for r in requests %}
+      <tr>
+        <td>{{ r.reference }}</td><td>{{ r.name }}<br><small class="text-muted">{{ r.email }} · {{ r.phone }}</small></td>
+        <td>{{ r.company_name }}</td>
+        <td>{% for i in r.items %}{{ i.variant.product.name }} ({{ i.variant.label }}) x{{ i.quantity }}<br>{% endfor %}</td>
+        <td><span class="status-badge">{{ r.status }}</span></td>
+        <td>
+          <form method="post" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="request_id" value="{{ r.id }}">
+            <select name="status" class="form-select form-select-sm">
+              {% for s in ["NEW","CONTACTED","QUOTED","CONVERTED","CLOSED"] %}
+              <option value="{{ s }}" {{ 'selected' if r.status==s }}>{{ s }}</option>
+              {% endfor %}
+            </select>
+            <input type="text" name="admin_note" class="form-control form-control-sm" value="{{ r.admin_note or '' }}" placeholder="Note">
+            <button type="submit" class="btn btn-sm btn-maagi-outline">Save</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

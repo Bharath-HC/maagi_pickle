@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <p class="hero-eyebrow">Since 2001 &middot; Prashanth Home Industries</p>
+        <h1 class="hero-title">THE TRUE TASTE<br>OF TRADITION</h1>
+        <p class="hero-sub">Authentic Indian Pickles Crafted with Tradition, Quality and Passion.</p>
+        <div class="d-flex gap-3 flex-wrap">
+          <a href="{{ url_for('products.catalog') }}" class="btn btn-maagi btn-lg">Shop Now</a>
+          <a href="{{ url_for('main.about') }}" class="btn btn-maagi-outline btn-lg">Explore Our Story</a>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='images/banners/hero-portrait.webp') }}" class="hero-img" alt="Maagi Pickle jars">
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if featured %}
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Fan Favourites</p>
+      <h2>Featured Products</h2>
+    </div>
+    <div class="row g-4">
+      {% for product in featured %}
+      <div class="col-6 col-md-4 col-lg-3">
+        {% include "components/product_card.html" %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section--soft">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Why Maagi</p>
+      <h2>Crafted the Traditional Way</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <i class="bi bi-flower2"></i>
+          <h5>Traditional Taste</h5>
+          <p>Recipes passed down through generations, true to authentic Indian flavour.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <i class="bi bi-basket2"></i>
+          <h5>Quality Ingredients</h5>
+          <p>Carefully sourced spices, oils and produce for consistent quality in every jar.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <i class="bi bi-droplet-half"></i>
+          <h5>Hygienic Preparation</h5>
+          <p>Prepared in a clean, controlled environment following strict hygiene practices.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="feature-card">
+          <i class="bi bi-box-seam"></i>
+          <h5>Carefully Packed</h5>
+          <p>Sealed and packed to preserve freshness from our kitchen to your table.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% if categories %}
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Browse</p>
+      <h2>Product Categories</h2>
+    </div>
+    <div class="row g-4">
+      {% for cat in categories %}
+      <div class="col-6 col-md-4 col-lg-2">
+        <a href="{{ url_for('products.catalog', category=cat.id) }}" class="category-card">
+          <img src="{{ url_for('static', filename=cat.image) if cat.image else url_for('static', filename='images/categories/specialty.webp') }}" alt="{{ cat.name }}">
+          <span>{{ cat.name }}</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<section class="section brand-story">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <img src="{{ url_for('static', filename='images/banners/brand-story.webp') }}" class="rounded-4 w-100" alt="Maagi Pickle tradition">
+      </div>
+      <div class="col-lg-6">
+        <p class="section-eyebrow">Our Heritage</p>
+        <h2>Tradition in Every Jar</h2>
+        <p>Maagi Pickle began in 2001 under Prashanth Home Industries, rooted in a simple belief: pickles should taste like they were made at home. Every batch is prepared with care, blending time-honoured recipes with consistent quality control, so the taste you remember is the taste you get in every jar.</p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-maagi-outline">Read Our Story</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section b2b-cta">
+  <div class="container text-center">
+    <h2>Looking for Bulk Supply?</h2>
+    <p>We partner with Restaurants, Hotels, Retailers, Wholesalers and Distributors across India.</p>
+    <a href="{{ url_for('main.become_distributor') }}" class="btn btn-light btn-lg">BECOME A BUSINESS PARTNER</a>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="section-heading">
+      <p class="section-eyebrow">Testimonials</p>
+      <h2>What Our Customers Say</h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <p>"Reminds me exactly of the pickles my grandmother used to make. The lemon chilli is a staple in our home now."</p>
+          <div class="testimonial-author">— Ananya R., Bengaluru</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <p>"We stock Maagi Pickle at our restaurant — consistent quality and our customers keep asking for it by name."</p>
+          <div class="testimonial-author">— Suresh K., Restaurant Owner</div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="testimonial-card">
+          <p>"Great packaging, fresh taste, and the dry fruit pickle is unlike anything else we've tried."</p>
+          <div class="testimonial-author">— Meera P., Hyderabad</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section newsletter-band">
+  <div class="container text-center">
+    <h2>Get Maagi Updates</h2>
+    <p>New flavours, offers and stories from the Maagi kitchen — straight to your inbox.</p>
+    <form method="post" action="{{ url_for('main.newsletter_subscribe') }}" class="newsletter-inline mx-auto">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+      <button type="submit" class="btn btn-maagi">Subscribe</button>
+    </form>
+  </div>
+</section>
+
+{% endblock %}

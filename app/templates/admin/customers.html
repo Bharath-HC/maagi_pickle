@@ -1,0 +1,24 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Customers</h3>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Joined</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for u in customers %}
+      <tr>
+        <td>{{ u.name }}</td><td>{{ u.email }}</td><td>{{ u.phone }}</td><td>{{ u.created_at.strftime('%d %b %Y') }}</td>
+        <td><span class="status-badge {{ 'status-confirmed' if u.is_active else 'status-cancelled' }}">{{ 'Active' if u.is_active else 'Inactive' }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('admin.toggle_user_active', user_id=u.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">{{ 'Deactivate' if u.is_active else 'Activate' }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "components/pagination.html" %}
+</div>
+{% endblock %}

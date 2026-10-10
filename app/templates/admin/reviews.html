@@ -1,0 +1,25 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Reviews</h3>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Product</th><th>User</th><th>Rating</th><th>Title</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for r in reviews %}
+      <tr>
+        <td>{{ r.product.name }}</td><td>{{ r.user.name }}</td>
+        <td>{% for i in range(r.rating) %}<i class="bi bi-star-fill text-warning"></i>{% endfor %}</td>
+        <td>{{ r.title }}</td>
+        <td><span class="status-badge {{ 'status-confirmed' if r.status == 'APPROVED' else 'status-cancelled' }}">{{ r.status }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('admin.toggle_review', review_id=r.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-secondary">{{ 'Reject' if r.status=='APPROVED' else 'Approve' }}</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

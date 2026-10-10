@@ -1,0 +1,27 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Support Tickets</h3>
+<div class="dash-card">
+  {% for t in tickets %}
+  <div class="notification-item">
+    <div class="d-flex justify-content-between">
+      <strong>{{ t.subject }}</strong>
+      <span class="status-badge {{ 'status-confirmed' if t.status=='RESOLVED' else 'status-pending' }}">{{ t.status }}</span>
+    </div>
+    <p class="small mb-1">{{ t.user.name }} ({{ t.category }}): {{ t.message }}</p>
+    <form method="post" class="d-flex gap-2">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="ticket_id" value="{{ t.id }}">
+      <input type="text" name="admin_reply" class="form-control form-control-sm" value="{{ t.admin_reply or '' }}" placeholder="Reply">
+      <div class="form-check">
+        <input type="checkbox" name="resolve" class="form-check-input" {{ 'checked' if t.status=='RESOLVED' }}>
+        <label class="form-check-label small">Resolved</label>
+      </div>
+      <button type="submit" class="btn btn-sm btn-maagi-outline">Save</button>
+    </form>
+  </div>
+  {% else %}
+  <p class="text-muted">No support tickets.</p>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,42 @@
+<div class="product-card h-100">
+  <div class="product-card__media">
+    <a href="{{ url_for('products.detail', slug=product.slug) }}">
+      <img src="{{ url_for('static', filename=product.primary_image) if product.primary_image else url_for('static', filename='images/branding/maagi-logo.webp') }}"
+           alt="{{ product.name }}" loading="lazy">
+    </a>
+    {% if product.featured %}<span class="badge-featured">Bestseller</span>{% endif %}
+    {% if current_user.is_authenticated and current_user.role == Role.CUSTOMER %}
+    <form method="post" action="{{ url_for('customer.wishlist_toggle', product_id=product.id) }}" class="wishlist-toggle">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="wishlist-btn" aria-label="Toggle wishlist"><i class="bi bi-heart"></i></button>
+    </form>
+    {% endif %}
+  </div>
+  <div class="product-card__body">
+    <div class="product-card__cat">{{ product.category.name if product.category else '' }}</div>
+    <h3 class="product-card__title"><a href="{{ url_for('products.detail', slug=product.slug) }}">{{ product.name }}</a></h3>
+    <div class="product-card__rating">
+      {% set rs = product.rating_summary %}
+      {% for i in range(1,6) %}<i class="bi {{ 'bi-star-fill' if i <= rs.average|round(0,'floor') else 'bi-star' }}"></i>{% endfor %}
+      <span class="text-muted small">({{ rs.count }})</span>
+    </div>
+    {% if product.active_variants %}
+    {% set v = product.active_variants[0] %}
+    <div class="product-card__packs">
+      {% for pv in product.active_variants[:4] %}<span class="pack-pill">{{ pv.label }}</span>{% endfor %}
+    </div>
+    <div class="product-card__price">
+      <span class="price-now">{{ variant_price(v, role)|rupees }}</span>
+      {% if v.mrp > variant_price(v, role) %}<span class="price-mrp">{{ v.mrp|rupees }}</span>{% endif %}
+    </div>
+    <form method="post" action="{{ url_for('cart.add') }}" class="mt-2">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <input type="hidden" name="variant_id" value="{{ v.id }}">
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" class="btn btn-maagi btn-sm w-100" {{ 'disabled' if not product.in_stock else '' }}>
+        {{ 'Out of Stock' if not product.in_stock else 'Add to Cart' }}
+      </button>
+    </form>
+    {% endif %}
+  </div>
+</div>

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block body_class %}admin-body{% endblock %}
+{% block content %}
+<div class="dash-shell dash-shell--admin">
+  <button class="dash-sidebar-toggle d-lg-none" id="dashSidebarToggle"><i class="bi bi-list"></i> Menu</button>
+  <aside class="dash-sidebar dash-sidebar--admin" id="dashSidebar">
+    <div class="dash-sidebar__title"><i class="bi bi-shield-lock"></i> Admin Console</div>
+    <nav class="dash-nav">
+      <a href="{{ url_for('admin.dashboard') }}" class="{{ 'active' if request.endpoint=='admin.dashboard' }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="{{ url_for('admin.products') }}" class="{{ 'active' if request.endpoint and 'product' in request.endpoint }}"><i class="bi bi-box-seam"></i> Products</a>
+      <a href="{{ url_for('admin.categories') }}" class="{{ 'active' if request.endpoint=='admin.categories' }}"><i class="bi bi-tags"></i> Categories</a>
+      <a href="{{ url_for('admin.orders') }}" class="{{ 'active' if request.endpoint and 'order' in request.endpoint }}"><i class="bi bi-receipt"></i> Orders</a>
+      <a href="{{ url_for('admin.customers') }}" class="{{ 'active' if request.endpoint=='admin.customers' }}"><i class="bi bi-people"></i> Customers</a>
+      <a href="{{ url_for('admin.wholesalers') }}" class="{{ 'active' if request.endpoint=='admin.wholesalers' }}"><i class="bi bi-shop"></i> Wholesalers</a>
+      <a href="{{ url_for('admin.distributors') }}" class="{{ 'active' if request.endpoint=='admin.distributors' }}"><i class="bi bi-truck"></i> Distributors</a>
+      <a href="{{ url_for('admin.inventory') }}" class="{{ 'active' if request.endpoint=='admin.inventory' }}"><i class="bi bi-archive"></i> Inventory</a>
+      <a href="{{ url_for('admin.coupons') }}" class="{{ 'active' if request.endpoint=='admin.coupons' }}"><i class="bi bi-ticket-perforated"></i> Coupons</a>
+      <a href="{{ url_for('admin.reviews') }}" class="{{ 'active' if request.endpoint=='admin.reviews' }}"><i class="bi bi-star"></i> Reviews</a>
+      <a href="{{ url_for('admin.bulk_requests') }}" class="{{ 'active' if request.endpoint=='admin.bulk_requests' }}"><i class="bi bi-cart-check"></i> Bulk Requests</a>
+      <a href="{{ url_for('admin.reports') }}" class="{{ 'active' if request.endpoint and 'report' in request.endpoint }}"><i class="bi bi-graph-up"></i> Reports</a>
+      <a href="{{ url_for('admin.banners') }}" class="{{ 'active' if request.endpoint=='admin.banners' }}"><i class="bi bi-image"></i> Banners</a>
+      <a href="{{ url_for('admin.notifications') }}" class="{{ 'active' if request.endpoint=='admin.notifications' }}"><i class="bi bi-bell"></i> Notifications</a>
+      <a href="{{ url_for('admin.enquiries') }}" class="{{ 'active' if request.endpoint=='admin.enquiries' }}"><i class="bi bi-envelope"></i> Enquiries</a>
+      <a href="{{ url_for('admin.support_tickets') }}" class="{{ 'active' if request.endpoint=='admin.support_tickets' }}"><i class="bi bi-life-preserver"></i> Support Tickets</a>
+      <a href="{{ url_for('admin.audit_logs') }}" class="{{ 'active' if request.endpoint=='admin.audit_logs' }}"><i class="bi bi-journal-text"></i> Audit Logs</a>
+      <a href="{{ url_for('admin.settings') }}" class="{{ 'active' if request.endpoint=='admin.settings' }}"><i class="bi bi-gear"></i> Settings</a>
+      <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+  </aside>
+  <div class="dash-main">
+    {% block dash_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

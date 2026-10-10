@@ -1,0 +1,36 @@
+{% extends "customer/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Welcome back, {{ current_user.name.split(' ')[0] }}</h3>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.total_orders }}</div><div class="stat-card__label">Total Orders</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.pending_orders }}</div><div class="stat-card__label">Active Orders</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.delivered_orders }}</div><div class="stat-card__label">Delivered</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.wishlist_count }}</div><div class="stat-card__label">Wishlist Items</div></div></div>
+</div>
+<div class="dash-card">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Recent Orders</h5>
+    <a href="{{ url_for('customer.orders') }}" class="small">View All</a>
+  </div>
+  {% if orders %}
+  <div class="table-responsive">
+    <table class="table data-table align-middle">
+      <thead><tr><th>Order #</th><th>Date</th><th>Status</th><th>Total</th><th></th></tr></thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ o.order_number }}</td>
+          <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+          <td><span class="status-badge status-{{ o.order_status|lower }}">{{ o.status_label }}</span></td>
+          <td>{{ o.total_amount|rupees }}</td>
+          <td><a href="{{ url_for('customer.order_detail', order_number=o.order_number) }}" class="btn btn-sm btn-maagi-outline">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="text-muted">You haven't placed any orders yet. <a href="{{ url_for('products.catalog') }}">Start shopping</a></p>
+  {% endif %}
+</div>
+{% endblock %}

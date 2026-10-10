@@ -1,0 +1,60 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Admin Dashboard</h3>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ total_sales|rupees }}</div><div class="stat-card__label">Total Sales</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ today_sales|rupees }}</div><div class="stat-card__label">Today's Sales</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ monthly_sales|rupees }}</div><div class="stat-card__label">Monthly Sales</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ total_orders }}</div><div class="stat-card__label">Total Orders</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ pending_orders }}</div><div class="stat-card__label">Pending Orders</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ customers_count }}</div><div class="stat-card__label">Customers</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ wholesalers_count }}</div><div class="stat-card__label">Wholesalers</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ distributors_count }}</div><div class="stat-card__label">Distributors</div></div></div>
+</div>
+
+{% if low_stock %}
+<div class="alert alert-warning">
+  <strong>Low Stock Alert:</strong>
+  {% for v in low_stock %}{{ v.product.name }} ({{ v.label }}) — {{ v.available_stock }} left{% if not loop.last %}, {% endif %}{% endfor %}
+</div>
+{% endif %}
+
+<div class="row g-4 mb-4">
+  <div class="col-lg-6"><div class="dash-card"><h6>Monthly Sales</h6><canvas id="chartSales" height="180"></canvas></div></div>
+  <div class="col-lg-6"><div class="dash-card"><h6>Orders by Month</h6><canvas id="chartOrders" height="180"></canvas></div></div>
+  <div class="col-lg-6"><div class="dash-card"><h6>Product-wise Sales (Top 6)</h6><canvas id="chartProducts" height="200"></canvas></div></div>
+  <div class="col-lg-6"><div class="dash-card"><h6>Customer vs Wholesale vs Distributor Sales</h6><canvas id="chartTier" height="200"></canvas></div></div>
+  <div class="col-lg-6"><div class="dash-card"><h6>Order Status Distribution</h6><canvas id="chartStatus" height="200"></canvas></div></div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+const GREEN = "#1F6D3C", GOLD = "#E8A93C", RED = "#B3261E", CLAY = "#8B5A2B";
+new Chart(document.getElementById('chartSales'), {
+  type: 'line',
+  data: { labels: {{ months|tojson }}, datasets: [{ label: 'Sales (₹)', data: {{ monthly_sales_series|tojson }}, borderColor: GREEN, backgroundColor: 'rgba(31,109,60,.12)', fill: true, tension: .35 }] },
+});
+new Chart(document.getElementById('chartOrders'), {
+  type: 'bar',
+  data: { labels: {{ months|tojson }}, datasets: [{ label: 'Orders', data: {{ monthly_orders_series|tojson }}, backgroundColor: GOLD }] },
+});
+new Chart(document.getElementById('chartProducts'), {
+  type: 'bar',
+  data: { labels: {{ top_products|map(attribute='name')|list|tojson }}, datasets: [{ label: 'Revenue (₹)', data: {{ top_products|map(attribute='revenue')|list|tojson }}, backgroundColor: CLAY }] },
+  options: { indexAxis: 'y' },
+});
+new Chart(document.getElementById('chartTier'), {
+  type: 'doughnut',
+  data: { labels: ['Customer', 'Wholesaler', 'Distributor'], datasets: [{ data: [{{ tier_sales.CUSTOMER }}, {{ tier_sales.WHOLESALER }}, {{ tier_sales.DISTRIBUTOR }}], backgroundColor: [GREEN, GOLD, CLAY] }] },
+});
+new Chart(document.getElementById('chartStatus'), {
+  type: 'pie',
+  data: {
+    labels: {{ status_counts.keys()|list|tojson }},
+    datasets: [{ data: {{ status_counts.values()|list|tojson }}, backgroundColor: [GREEN,'#2d8a52',GOLD,CLAY,'#5b7fb5','#7a5fb5',RED,'#999','#c97a3a','#555'] }]
+  },
+});
+</script>
+{% endblock %}

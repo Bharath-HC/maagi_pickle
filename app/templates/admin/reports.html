@@ -1,0 +1,29 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="mb-0">Sales Reports</h3>
+  <a href="{{ url_for('admin.reports_export') }}" class="btn btn-maagi-outline"><i class="bi bi-download"></i> Export CSV</a>
+</div>
+<form method="get" class="d-flex gap-2 mb-4">
+  <input type="date" name="from" value="{{ from_date or '' }}" class="form-control" style="max-width:200px;">
+  <input type="date" name="to" value="{{ to_date or '' }}" class="form-control" style="max-width:200px;">
+  <button type="submit" class="btn btn-maagi-outline">Filter</button>
+</form>
+<div class="stat-card mb-4" style="max-width:260px;">
+  <div class="stat-card__value">{{ total|rupees }}</div>
+  <div class="stat-card__label">Total Sales (filtered)</div>
+</div>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Order #</th><th>Date</th><th>Customer</th><th>Tier</th><th>Status</th><th>Total</th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.order_number }}</td><td>{{ o.created_at.strftime('%d %b %Y') }}</td><td>{{ o.customer_name }}</td>
+        <td>{{ o.price_tier }}</td><td>{{ o.status_label }}</td><td>{{ o.total_amount|rupees }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

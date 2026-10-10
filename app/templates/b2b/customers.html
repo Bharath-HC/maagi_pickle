@@ -1,0 +1,33 @@
+{% extends "b2b/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">My Customers</h3>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="dash-card">
+      <table class="table data-table align-middle">
+        <thead><tr><th>Name</th><th>Phone</th><th>City</th><th>Notes</th></tr></thead>
+        <tbody>
+          {% for c in customers %}
+          <tr><td>{{ c.name }}</td><td>{{ c.phone }}</td><td>{{ c.city }}</td><td>{{ c.notes }}</td></tr>
+          {% else %}
+          <tr><td colspan="4" class="text-muted">No customers added yet.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-5">
+    <div class="dash-card">
+      <h6 class="mb-3">Add Customer</h6>
+      <form method="post" action="{{ url_for('b2b.' + ctx.prefix + '_add_customer') }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="mb-2"><input class="form-control" name="name" placeholder="Name" required></div>
+        <div class="mb-2"><input class="form-control" name="phone" placeholder="Phone"></div>
+        <div class="mb-2"><input class="form-control" name="city" placeholder="City"></div>
+        <div class="mb-2"><textarea class="form-control" name="notes" placeholder="Notes"></textarea></div>
+        <button type="submit" class="btn btn-maagi">Add Customer</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">{{ 'Edit' if product else 'New' }} Product</h3>
+<div class="dash-card mb-4">
+  <form method="post" enctype="multipart/form-data" novalidate>
+    {{ form.hidden_tag() }}
+    <div class="row g-3">
+      <div class="col-md-6">{{ form.name.label(class="form-label") }}{{ form.name(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.category_id.label(class="form-label") }}{{ form.category_id(class="form-select") }}</div>
+      <div class="col-md-4">{{ form.sku.label(class="form-label") }}{{ form.sku(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.hsn_code.label(class="form-label") }}{{ form.hsn_code(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.gst_percentage.label(class="form-label") }}{{ form.gst_percentage(class="form-control") }}</div>
+      <div class="col-12">{{ form.short_description.label(class="form-label") }}{{ form.short_description(class="form-control") }}</div>
+      <div class="col-12">{{ form.description.label(class="form-label") }}{{ form.description(class="form-control", rows=3) }}</div>
+      <div class="col-12">{{ form.ingredients.label(class="form-label") }}{{ form.ingredients(class="form-control", rows=2) }}</div>
+      <div class="col-12">{{ form.nutritional_information.label(class="form-label") }}{{ form.nutritional_information(class="form-control", rows=2) }}</div>
+      <div class="col-md-6">{{ form.shelf_life.label(class="form-label") }}{{ form.shelf_life(class="form-control") }}</div>
+      <div class="col-md-6">{{ form.manufacturer.label(class="form-label") }}{{ form.manufacturer(class="form-control") }}</div>
+      <div class="col-12">{{ form.storage_instructions.label(class="form-label") }}{{ form.storage_instructions(class="form-control", rows=2) }}</div>
+      <div class="col-md-4">{{ form.minimum_order_quantity.label(class="form-label") }}{{ form.minimum_order_quantity(class="form-control") }}</div>
+      <div class="col-md-4">{{ form.image.label(class="form-label") }}{{ form.image(class="form-control") }}</div>
+      <div class="col-md-4 d-flex align-items-end gap-3">
+        <div class="form-check">{{ form.featured(class="form-check-input") }}{{ form.featured.label(class="form-check-label") }}</div>
+        <div class="form-check">{{ form.active(class="form-check-input") }}{{ form.active.label(class="form-check-label") }}</div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-maagi mt-4">Save Product</button>
+  </form>
+</div>
+
+{% if product %}
+<div class="dash-card">
+  <h5 class="mb-3">Pack Sizes (Variants)</h5>
+  <table class="table data-table align-middle mb-4">
+    <thead><tr><th>Pack</th><th>SKU</th><th>MRP</th><th>Customer</th><th>Wholesaler</th><th>Distributor</th><th>Stock</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for v in product.variants %}
+      <tr>
+        <td>{{ v.label }}</td><td>{{ v.sku }}</td><td>{{ v.mrp|rupees }}</td><td>{{ v.customer_price|rupees }}</td>
+        <td>{{ v.wholesaler_price|rupees }}</td><td>{{ v.distributor_price|rupees }}</td>
+        <td>{{ v.stock_quantity }} {% if v.is_low_stock %}<span class="badge bg-warning-subtle text-warning">Low</span>{% endif %}</td>
+        <td><span class="status-badge {{ 'status-confirmed' if v.active else 'status-cancelled' }}">{{ 'Active' if v.active else 'Inactive' }}</span></td>
+        <td>
+          <form method="post" action="{{ url_for('admin.delete_variant', variant_id=v.id) }}" onsubmit="return confirm('Delete this pack size?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <h6 class="mb-3">Add Pack Size</h6>
+  <form method="post" action="{{ url_for('admin.add_variant', product_id=product.id) }}" enctype="multipart/form-data" novalidate>
+    {{ variant_form.hidden_tag() }}
+    <div class="row g-2">
+      <div class="col-md-2">{{ variant_form.weight.label(class="form-label small") }}{{ variant_form.weight(class="form-control form-control-sm") }}</div>
+      <div class="col-md-1">{{ variant_form.unit.label(class="form-label small") }}{{ variant_form.unit(class="form-select form-select-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.sku.label(class="form-label small") }}{{ variant_form.sku(class="form-control form-control-sm") }}</div>
+      <div class="col-md-1">{{ variant_form.mrp.label(class="form-label small") }}{{ variant_form.mrp(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.customer_price.label(class="form-label small") }}{{ variant_form.customer_price(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.wholesaler_price.label(class="form-label small") }}{{ variant_form.wholesaler_price(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.distributor_price.label(class="form-label small") }}{{ variant_form.distributor_price(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.stock_quantity.label(class="form-label small") }}{{ variant_form.stock_quantity(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.min_stock_level.label(class="form-label small") }}{{ variant_form.min_stock_level(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2">{{ variant_form.reorder_level.label(class="form-label small") }}{{ variant_form.reorder_level(class="form-control form-control-sm") }}</div>
+      <div class="col-md-3">{{ variant_form.image.label(class="form-label small") }}{{ variant_form.image(class="form-control form-control-sm") }}</div>
+      <div class="col-md-2 d-flex align-items-end">
+        <div class="form-check">{{ variant_form.active(class="form-check-input") }}{{ variant_form.active.label(class="form-check-label small") }}</div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-maagi btn-sm mt-3">Add Pack Size</button>
+  </form>
+</div>
+{% else %}
+<div class="alert alert-info">Save the product first to start adding pack sizes (variants).</div>
+{% endif %}
+{% endblock %}

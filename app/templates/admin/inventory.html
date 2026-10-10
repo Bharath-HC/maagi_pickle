@@ -1,0 +1,24 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Inventory</h3>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Product</th><th>Pack</th><th>SKU</th><th>Stock</th><th>Reserved</th><th>Available</th><th>Min Level</th><th></th></tr></thead>
+    <tbody>
+      {% for v in variants %}
+      <tr class="{{ 'table-warning' if v.is_low_stock }}">
+        <td>{{ v.product.name }}</td><td>{{ v.label }}</td><td>{{ v.sku }}</td>
+        <td>{{ v.stock_quantity }}</td><td>{{ v.reserved_stock }}</td><td>{{ v.available_stock }}</td><td>{{ v.min_stock_level }}</td>
+        <td>
+          <form method="post" action="{{ url_for('admin.restock_variant', variant_id=v.id) }}" class="d-flex gap-1">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="number" name="quantity" min="1" class="form-control form-control-sm" style="width:90px;" placeholder="Qty">
+            <button type="submit" class="btn btn-sm btn-maagi-outline">Restock</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

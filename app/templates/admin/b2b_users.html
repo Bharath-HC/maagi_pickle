@@ -1,0 +1,76 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">{{ role.title() }}s</h3>
+
+{% if pending %}
+<div class="dash-card mb-4">
+  <h6 class="mb-3">Pending Applications</h6>
+  <table class="table data-table align-middle">
+    <thead><tr><th>Name</th><th>Company</th><th>Phone</th><th>Email</th><th>Type</th><th>Expected Purchase</th><th></th></tr></thead>
+    <tbody>
+      {% for a in pending %}
+      <tr>
+        <td>{{ a.name }}</td><td>{{ a.company_name }}</td><td>{{ a.phone }}</td><td>{{ a.email }}</td>
+        <td>{{ a.business_type }}</td><td>{{ a.expected_monthly_purchase }}</td>
+        <td class="d-flex gap-1">
+          <form method="post" action="{{ url_for('admin.review_application', role=role, app_id=a.id) }}">
+            {{ form.hidden_tag() }}
+            <input type="hidden" name="action" value="approve">
+            <button type="submit" class="btn btn-sm btn-maagi">Approve</button>
+          </form>
+          <form method="post" action="{{ url_for('admin.review_application', role=role, app_id=a.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <input type="hidden" name="action" value="reject">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Reject</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<div class="dash-card mb-4">
+  <h6 class="mb-3">Approved {{ role.title() }}s</h6>
+  <table class="table data-table align-middle">
+    <thead><tr><th>Name</th><th>Company</th><th>Email</th><th>GST</th><th>Status</th><th></th></tr></thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td>{{ u.name }}</td><td>{{ u.company_name }}</td><td>{{ u.email }}</td><td>{{ u.gst_number }}</td>
+        <td><span class="status-badge {{ 'status-confirmed' if u.is_active else 'status-cancelled' }}">{{ 'Active' if u.is_active else 'Suspended' }}</span></td>
+        <td>
+          {% if u.is_active %}
+          <form method="post" action="{{ url_for('admin.suspend_b2b', user_id=u.id) }}" onsubmit="return confirm('Suspend this account?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-outline-danger">Suspend</button>
+          </form>
+          {% else %}
+          <form method="post" action="{{ url_for('admin.toggle_user_active', user_id=u.id) }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <button type="submit" class="btn btn-sm btn-maagi-outline">Reactivate</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% if history %}
+<div class="dash-card">
+  <h6 class="mb-3">Application History</h6>
+  <table class="table data-table align-middle">
+    <thead><tr><th>Name</th><th>Company</th><th>Status</th><th>Reviewed</th></tr></thead>
+    <tbody>
+      {% for a in history %}
+      <tr><td>{{ a.name }}</td><td>{{ a.company_name }}</td><td>{{ a.status }}</td>
+          <td>{{ a.reviewed_at.strftime('%d %b %Y') if a.reviewed_at else '—' }}</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

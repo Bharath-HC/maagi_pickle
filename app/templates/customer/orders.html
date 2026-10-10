@@ -1,0 +1,28 @@
+{% extends "customer/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">My Orders</h3>
+<div class="dash-card">
+  {% if orders %}
+  <div class="table-responsive">
+    <table class="table data-table align-middle">
+      <thead><tr><th>Order #</th><th>Date</th><th>Items</th><th>Status</th><th>Total</th><th></th></tr></thead>
+      <tbody>
+        {% for o in orders %}
+        <tr>
+          <td>{{ o.order_number }}</td>
+          <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+          <td>{{ o.items|length }}</td>
+          <td><span class="status-badge status-{{ o.order_status|lower }}">{{ o.status_label }}</span></td>
+          <td>{{ o.total_amount|rupees }}</td>
+          <td><a href="{{ url_for('customer.order_detail', order_number=o.order_number) }}" class="btn btn-sm btn-maagi-outline">View</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include "components/pagination.html" %}
+  {% else %}
+  <p class="text-muted">No orders yet. <a href="{{ url_for('products.catalog') }}">Start shopping</a></p>
+  {% endif %}
+</div>
+{% endblock %}

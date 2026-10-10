@@ -1,0 +1,20 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Settings</h3>
+<div class="dash-card" style="max-width:600px;">
+  <form method="post">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+    <div class="mb-3">
+      <label class="form-label">Homepage Announcement</label>
+      <input type="text" name="homepage_announcement" class="form-control" value="{{ settings.get('homepage_announcement','') }}">
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Support Email Override</label>
+      <input type="text" name="support_email" class="form-control" value="{{ settings.get('support_email','') }}">
+    </div>
+    <button type="submit" class="btn btn-maagi">Save Settings</button>
+  </form>
+  <hr>
+  <p class="small text-muted mb-0">Core configuration (SECRET_KEY, Razorpay keys, mail server, company details) is managed via environment variables — see <code>.env</code> and the README.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "b2b/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Support</h3>
+<div class="row g-4">
+  <div class="col-lg-6">
+    <div class="dash-card">
+      <h6 class="mb-3">New Ticket</h6>
+      <form method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <div class="mb-2">{{ form.category.label(class="form-label") }}{{ form.category(class="form-select") }}</div>
+        <div class="mb-2">{{ form.subject.label(class="form-label") }}{{ form.subject(class="form-control") }}</div>
+        <div class="mb-2">{{ form.message.label(class="form-label") }}{{ form.message(class="form-control", rows=4) }}</div>
+        <button type="submit" class="btn btn-maagi">Submit Ticket</button>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-6">
+    <div class="dash-card">
+      <h6 class="mb-3">My Tickets</h6>
+      {% for t in tickets %}
+      <div class="notification-item">
+        <strong>{{ t.subject }}</strong> <span class="status-badge status-{{ t.status|lower }}">{{ t.status }}</span>
+        <p class="mb-1 small">{{ t.message }}</p>
+        {% if t.admin_reply %}<p class="small text-success mb-0"><strong>Reply:</strong> {{ t.admin_reply }}</p>{% endif %}
+      </div>
+      {% else %}
+      <p class="text-muted">No tickets yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}

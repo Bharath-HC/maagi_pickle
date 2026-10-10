@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — {{ company_name }}{% endblock %}
+{% block content %}
+<div class="container py-5 text-center">
+  <i class="bi bi-check-circle-fill text-success display-1"></i>
+  <h2 class="mt-3">Thank you! Your order is confirmed.</h2>
+  <p class="text-muted">Order Number: <strong>{{ order.order_number }}</strong></p>
+  <p>We'll send you updates as your order makes its way to you.</p>
+  <div class="d-flex justify-content-center gap-3 mt-4">
+    <a href="{{ url_for('customer.order_detail', order_number=order.order_number) }}" class="btn btn-maagi">Track Order</a>
+    {% if order.has_invoice %}
+    <a href="{{ url_for('customer.order_invoice', order_number=order.order_number) }}" class="btn btn-maagi-outline">Download Invoice</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

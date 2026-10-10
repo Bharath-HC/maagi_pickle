@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="dash-shell">
+  <button class="dash-sidebar-toggle d-lg-none" id="dashSidebarToggle"><i class="bi bi-list"></i> Menu</button>
+  <aside class="dash-sidebar" id="dashSidebar">
+    <div class="dash-sidebar__title">{{ ctx.title }}</div>
+    <nav class="dash-nav">
+      <a href="{{ url_for('b2b.' + ctx.prefix + '_dashboard') }}" class="{{ 'active' if request.endpoint == 'b2b.' + ctx.prefix + '_dashboard' }}"><i class="bi bi-speedometer2"></i> Dashboard</a>
+      <a href="{{ url_for('products.catalog') }}"><i class="bi bi-box-seam"></i> Products</a>
+      <a href="{{ url_for('main.bulk_orders') }}"><i class="bi bi-cart-plus"></i> Place Bulk Order</a>
+      <a href="{{ url_for('b2b.' + ctx.prefix + '_orders') }}" class="{{ 'active' if request.endpoint and (ctx.prefix + '_order') in request.endpoint }}"><i class="bi bi-receipt"></i> My Orders</a>
+      <a href="{{ url_for('b2b.' + ctx.prefix + '_payments') }}" class="{{ 'active' if request.endpoint == 'b2b.' + ctx.prefix + '_payments' }}"><i class="bi bi-credit-card"></i> Payments</a>
+      <a href="{{ url_for('b2b.' + ctx.prefix + '_customers') }}" class="{{ 'active' if request.endpoint == 'b2b.' + ctx.prefix + '_customers' }}"><i class="bi bi-people"></i> My Customers</a>
+      <a href="{{ url_for('customer.profile') }}"><i class="bi bi-person"></i> Profile</a>
+      <a href="{{ url_for('b2b.' + ctx.prefix + '_support') }}" class="{{ 'active' if request.endpoint == 'b2b.' + ctx.prefix + '_support' }}"><i class="bi bi-life-preserver"></i> Support</a>
+      <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
+    </nav>
+  </aside>
+  <div class="dash-main">
+    {% block dash_content %}{% endblock %}
+  </div>
+</div>
+{% endblock %}

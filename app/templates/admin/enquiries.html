@@ -1,0 +1,15 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Contact Enquiries</h3>
+<div class="dash-card">
+  {% for m in messages %}
+  <div class="notification-item">
+    <div class="d-flex justify-content-between"><strong>{{ m.subject }}</strong><small class="text-muted">{{ m.created_at.strftime('%d %b %Y') }}</small></div>
+    <p class="small mb-1">{{ m.message }}</p>
+    <small class="text-muted">{{ m.name }} &middot; {{ m.email }} {% if m.phone %}&middot; {{ m.phone }}{% endif %}</small>
+  </div>
+  {% else %}
+  <p class="text-muted">No enquiries yet.</p>
+  {% endfor %}
+</div>
+{% endblock %}

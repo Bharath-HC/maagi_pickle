@@ -1,0 +1,33 @@
+{% extends "b2b/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">{{ ctx.title }} — Welcome, {{ current_user.company_name or current_user.name }}</h3>
+<div class="row g-3 mb-4">
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.total_orders }}</div><div class="stat-card__label">Total Orders</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.pending_orders }}</div><div class="stat-card__label">Pending</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.delivered_orders }}</div><div class="stat-card__label">Delivered</div></div></div>
+  <div class="col-6 col-md-3"><div class="stat-card"><div class="stat-card__value">{{ stats.outstanding|rupees }}</div><div class="stat-card__label">Outstanding</div></div></div>
+</div>
+<div class="dash-card">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="mb-0">Recent Orders</h5>
+    <a href="{{ url_for('b2b.' + ctx.prefix + '_orders') }}" class="small">View All</a>
+  </div>
+  {% if recent %}
+  <table class="table data-table align-middle">
+    <thead><tr><th>Order #</th><th>Date</th><th>Status</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+      {% for o in recent %}
+      <tr>
+        <td>{{ o.order_number }}</td><td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+        <td><span class="status-badge status-{{ o.order_status|lower }}">{{ o.status_label }}</span></td>
+        <td>{{ o.total_amount|rupees }}</td>
+        <td><a href="{{ url_for('b2b.' + ctx.prefix + '_order_detail', order_number=o.order_number) }}" class="btn btn-sm btn-maagi-outline">View</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="text-muted">No orders yet. <a href="{{ url_for('main.bulk_orders') }}">Place a bulk order</a></p>
+  {% endif %}
+</div>
+{% endblock %}

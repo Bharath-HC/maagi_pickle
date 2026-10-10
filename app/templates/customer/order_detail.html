@@ -1,0 +1,66 @@
+{% extends "customer/_layout.html" %}
+{% block dash_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="mb-0">Order {{ order.order_number }}</h3>
+  <div class="d-flex gap-2">
+    {% if order.has_invoice %}<a href="{{ url_for('customer.order_invoice', order_number=order.order_number) }}" class="btn btn-sm btn-maagi-outline">Download Invoice</a>{% endif %}
+    {% if order.can_cancel %}
+    <form method="post" action="{{ url_for('customer.cancel_order', order_number=order.order_number) }}" onsubmit="return confirm('Cancel this order?');">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-sm btn-outline-danger">Cancel Order</button>
+    </form>
+    {% endif %}
+    {% if order.order_status == 'DELIVERED' %}
+    <form method="post" action="{{ url_for('customer.reorder', order_number=order.order_number) }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button type="submit" class="btn btn-sm btn-maagi">Reorder</button>
+    </form>
+    {% endif %}
+  </div>
+</div>
+
+<div class="dash-card mb-4">
+  <h6 class="mb-3">Order Tracking</h6>
+  <div class="order-timeline">
+    {% for label, done, ts in timeline %}
+    <div class="order-timeline__step {{ 'done' if done }}">
+      <div class="order-timeline__dot"></div>
+      <div class="order-timeline__label">{{ label }}{% if ts %}<br><small class="text-muted">{{ ts.strftime('%d %b, %I:%M %p') }}</small>{% endif %}</div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="dash-card">
+      <h6 class="mb-3">Items</h6>
+      <table class="table data-table align-middle">
+        <thead><tr><th>Product</th><th>Pack</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for item in order.items %}
+          <tr><td>{{ item.product_name }}</td><td>{{ item.variant_label }}</td><td>{{ item.quantity }}</td>
+              <td>{{ item.unit_price|rupees }}</td><td>{{ (item.subtotal + item.tax)|rupees }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="dash-card mb-3">
+      <h6 class="mb-3">Order Summary</h6>
+      <div class="d-flex justify-content-between"><span>Subtotal</span><span>{{ order.subtotal|rupees }}</span></div>
+      <div class="d-flex justify-content-between"><span>Discount</span><span>- {{ order.discount|rupees }}</span></div>
+      <div class="d-flex justify-content-between"><span>GST</span><span>{{ order.tax|rupees }}</span></div>
+      <div class="d-flex justify-content-between"><span>Shipping</span><span>{{ order.shipping_charge|rupees }}</span></div>
+      <hr>
+      <div class="d-flex justify-content-between fw-bold"><span>Total</span><span>{{ order.total_amount|rupees }}</span></div>
+      <p class="small text-muted mt-2 mb-0">Payment: {{ order.payment_method }} &middot; {{ order.payment_status }}</p>
+    </div>
+    <div class="dash-card">
+      <h6 class="mb-2">Shipping Address</h6>
+      <p class="small mb-0" style="white-space:pre-line;">{{ order.shipping_address }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

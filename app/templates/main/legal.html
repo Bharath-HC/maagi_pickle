@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set titles = {
+  "privacy": "Privacy Policy", "terms": "Terms & Conditions",
+  "shipping": "Shipping Policy", "refund": "Refund Policy"
+} %}
+{% block title %}{{ titles[section] }} — {{ company_name }}{% endblock %}
+{% block content %}
+<div class="page-header text-center"><div class="container"><h1>{{ titles[section] }}</h1></div></div>
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-9 legal-content">
+      {% if section == "privacy" %}
+      <p>{{ company_name }} ("we", "us") respects your privacy. We collect only the information needed to process your orders and improve your shopping experience — your name, contact details, shipping address and order history. We do not sell your personal data to third parties. Payment details are processed securely by our payment partner and are never stored on our servers.</p>
+      <p>You may request access to, correction of, or deletion of your personal data at any time by contacting us at {{ company_email }}.</p>
+      {% elif section == "terms" %}
+      <p>By using this website and placing an order with {{ company_name }}, you agree to these terms. All product descriptions, pricing and availability are subject to change without notice. Orders are subject to acceptance and stock availability. Prices shown for Distributor and Wholesaler accounts are available only to approved business accounts.</p>
+      <p>All content on this site, including the Maagi Pickle name and logo, is the property of Prashanth Home Industries and may not be reproduced without permission.</p>
+      {% elif section == "shipping" %}
+      <p>We aim to dispatch all orders within 1-2 business days of confirmation. Delivery timelines vary by location and are shown at checkout. Free shipping is available on retail orders above the threshold shown in your cart; business/bulk orders are quoted individually.</p>
+      {% elif section == "refund" %}
+      <p>If you receive a damaged or incorrect item, please contact us within 48 hours of delivery with photos of the product for a replacement or refund. Due to the perishable nature of food products, we are unable to accept returns for change of mind once a package has been opened.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Orders</h3>
+<form method="get" class="mb-3 d-flex gap-2">
+  <select name="status" class="form-select" style="max-width:220px;" onchange="this.form.submit()">
+    <option value="">All Statuses</option>
+    {% for s in statuses %}<option value="{{ s }}" {{ 'selected' if status==s }}>{{ s.replace('_',' ').title() }}</option>{% endfor %}
+  </select>
+</form>
+<div class="dash-card">
+  <table class="table data-table align-middle">
+    <thead><tr><th>Order #</th><th>Customer</th><th>Tier</th><th>Date</th><th>Status</th><th>Payment</th><th>Total</th><th></th></tr></thead>
+    <tbody>
+      {% for o in orders %}
+      <tr>
+        <td>{{ o.order_number }}</td><td>{{ o.customer_name }}</td><td>{{ o.price_tier }}</td>
+        <td>{{ o.created_at.strftime('%d %b %Y') }}</td>
+        <td><span class="status-badge status-{{ o.order_status|lower }}">{{ o.status_label }}</span></td>
+        <td>{{ o.payment_status }}</td><td>{{ o.total_amount|rupees }}</td>
+        <td><a href="{{ url_for('admin.order_detail', order_id=o.id) }}" class="btn btn-sm btn-maagi-outline">Manage</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% include "components/pagination.html" %}
+</div>
+{% endblock %}

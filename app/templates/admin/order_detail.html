@@ -1,0 +1,58 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h3 class="mb-0">Order {{ order.order_number }}</h3>
+  {% if order.has_invoice %}<a href="{{ url_for('admin.order_invoice', order_id=order.id) }}" class="btn btn-sm btn-maagi-outline">Download Invoice</a>{% endif %}
+</div>
+<div class="row g-4">
+  <div class="col-lg-8">
+    <div class="dash-card mb-4">
+      <h6 class="mb-3">Items</h6>
+      <table class="table data-table align-middle">
+        <thead><tr><th>Product</th><th>Pack</th><th>Qty</th><th>Price</th><th>Total</th></tr></thead>
+        <tbody>
+          {% for item in order.items %}
+          <tr><td>{{ item.product_name }}</td><td>{{ item.variant_label }}</td><td>{{ item.quantity }}</td>
+              <td>{{ item.unit_price|rupees }}</td><td>{{ (item.subtotal + item.tax)|rupees }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="dash-card">
+      <h6 class="mb-3">Order Tracking</h6>
+      <div class="order-timeline">
+        {% for label, done, ts in timeline %}
+        <div class="order-timeline__step {{ 'done' if done }}">
+          <div class="order-timeline__dot"></div>
+          <div class="order-timeline__label">{{ label }}{% if ts %}<br><small class="text-muted">{{ ts.strftime('%d %b, %I:%M %p') }}</small>{% endif %}</div>
+        </div>
+        {% endfor %}
+      </div>
+      <form method="post" class="row g-2 mt-3">
+        {{ form.hidden_tag() }}
+        <div class="col-md-5">{{ form.order_status(class="form-select") }}</div>
+        <div class="col-md-5">{{ form.note(class="form-control", placeholder="Note (optional)") }}</div>
+        <div class="col-md-2"><button type="submit" class="btn btn-maagi w-100">Update</button></div>
+      </form>
+    </div>
+  </div>
+  <div class="col-lg-4">
+    <div class="dash-card mb-3">
+      <h6 class="mb-2">Customer</h6>
+      <p class="small mb-0">{{ order.customer_name }}<br>{{ order.customer_email }}<br>{{ order.customer_phone }}
+      {% if order.company_name %}<br><strong>{{ order.company_name }}</strong>{% endif %}
+      {% if order.gst_number %}<br>GST: {{ order.gst_number }}{% endif %}</p>
+    </div>
+    <div class="dash-card mb-3">
+      <h6 class="mb-2">Shipping Address</h6>
+      <p class="small mb-0" style="white-space:pre-line;">{{ order.shipping_address }}</p>
+    </div>
+    <div class="dash-card">
+      <h6 class="mb-3">Payment</h6>
+      <p class="small mb-1">Method: {{ order.payment_method }}</p>
+      <p class="small mb-1">Status: {{ order.payment_status }}</p>
+      <p class="small mb-0">Total: {{ order.total_amount|rupees }}</p>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends "admin/_layout.html" %}
+{% block dash_content %}
+<h3 class="mb-4">Notifications</h3>
+<div class="dash-card">
+  {% for n in items %}
+  <div class="notification-item {{ '' if n.is_read else 'unread' }}">
+    <strong>{{ n.title }}</strong>
+    <p class="mb-1 small">{{ n.message }}</p>
+    <small class="text-muted">{{ n.created_at.strftime('%d %b %Y, %I:%M %p') }}</small>
+  </div>
+  {% else %}
+  <p class="text-muted">No notifications.</p>
+  {% endfor %}
+</div>
+{% endblock %}
