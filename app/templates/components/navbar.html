@@ -2,8 +2,12 @@
   <div class="container d-flex justify-content-between align-items-center py-1 small">
     <div><i class="bi bi-telephone-fill me-1"></i>{{ company_phone }} &nbsp; <i class="bi bi-envelope-fill me-1"></i>{{ company_email }}</div>
     <div>
+      {% if b2b_enabled %}
       <a href="{{ url_for('main.become_distributor') }}" class="text-white-50 me-3">Become a Distributor</a>
       <a href="{{ url_for('main.become_wholesaler') }}" class="text-white-50">Become a Wholesaler</a>
+      {% else %}
+      <i class="bi bi-truck me-1"></i> Fresh pickles, delivered across India
+      {% endif %}
     </div>
   </div>
 </div>

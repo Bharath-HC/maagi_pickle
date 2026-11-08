@@ -96,7 +96,13 @@ class User(UserMixin, db.Model):
 
 @login_manager.user_loader
 def load_user(user_id):
-    return db.session.get(User, int(user_id))
+    user = db.session.get(User, int(user_id))
+    # Distributor / Wholesaler sessions are dropped while the B2B portals are switched off.
+    if user and user.role in (Role.DISTRIBUTOR, Role.WHOLESALER):
+        from flask import current_app
+        if not current_app.config.get("B2B_ENABLED"):
+            return None
+    return user
 
 
 class Address(db.Model):

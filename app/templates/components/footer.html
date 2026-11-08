@@ -15,8 +15,10 @@
         <ul class="footer-links">
           <li><a href="{{ url_for('products.catalog') }}">All Products</a></li>
           <li><a href="{{ url_for('main.bulk_orders') }}">Bulk Orders</a></li>
+          {% if b2b_enabled %}
           <li><a href="{{ url_for('main.become_distributor') }}">Become a Distributor</a></li>
           <li><a href="{{ url_for('main.become_wholesaler') }}">Become a Wholesaler</a></li>
+          {% endif %}
         </ul>
       </div>
       <div class="col-lg-2 col-md-6">

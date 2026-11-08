@@ -1,8 +1,8 @@
-<div class="product-card h-100">
+<div class="product-card h-100" data-tilt="7" data-reveal>
   <div class="product-card__media">
     <a href="{{ url_for('products.detail', slug=product.slug) }}">
       <img src="{{ url_for('static', filename=product.primary_image) if product.primary_image else url_for('static', filename='images/branding/maagi-logo.webp') }}"
-           alt="{{ product.name }}" loading="lazy">
+           alt="{{ product.name }}" loading="lazy" data-z="40">
     </a>
     {% if product.featured %}<span class="badge-featured">Bestseller</span>{% endif %}
     {% if current_user.is_authenticated and current_user.role == Role.CUSTOMER %}

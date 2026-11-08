@@ -118,6 +118,7 @@ def register_template_helpers(app):
             "company_email": app.config["COMPANY_EMAIL"],
             "company_phone": app.config["COMPANY_PHONE"],
             "Role": Role,
+            "b2b_enabled": app.config.get("B2B_ENABLED", False),
             "role": cu.role if cu.is_authenticated else Role.CUSTOMER,
         }
 

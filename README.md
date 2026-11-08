@@ -224,6 +224,24 @@ full COD checkout with inventory deduction, and coupon minimum-order validation.
    client-side Checkout.js posts the callback without a Flask-issued CSRF token — this is
    documented in `app/routes/checkout.py`.
 
+## Distributor / Wholesaler portals (currently switched off)
+
+Only the **Customer** and **Admin** interfaces are live. All Distributor/Wholesaler code (models,
+pricing, portals, applications, admin approval screens) is still in the project; a single flag
+controls access:
+
+```
+B2B_ENABLED=false   # default: B2B logins, partner applications and portals are closed
+B2B_ENABLED=true    # set this environment variable to bring them back
+```
+
+## Customer UI: 3D layer
+
+`app/static/css/3d.css` and `app/static/js/3d.js` add the depth effects (hero parallax, 3D product
+carousel, tilt-and-glare cards, scroll reveals, pressable buttons). They are dependency-free,
+touch devices skip the tilt, and `prefers-reduced-motion` turns all motion off. To remove the
+effects, delete the two `3d.*` tags in `app/templates/base.html`.
+
 ## 11. Production Deployment
 
 ```bash

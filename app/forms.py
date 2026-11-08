@@ -26,6 +26,13 @@ class LoginForm(FlaskForm):
         default="CUSTOMER",
     )
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        from flask import current_app
+        if not current_app.config.get("B2B_ENABLED"):
+            self.login_as.choices = [c for c in self.login_as.choices
+                                     if c[0] in ("CUSTOMER", "ADMIN")]
+
 
 class RegisterForm(FlaskForm):
     name = StringField("Full Name", validators=[DataRequired(), Length(max=120)])

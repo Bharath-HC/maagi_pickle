@@ -14,7 +14,7 @@
         {% if current_user.unread_notifications %}<span class="badge bg-danger ms-1">{{ current_user.unread_notifications }}</span>{% endif %}
       </a>
       <a href="{{ url_for('customer.profile') }}" class="{{ 'active' if request.endpoint=='customer.profile' }}"><i class="bi bi-person"></i> Profile</a>
-      <a href="{{ url_for('main.become_distributor') }}"><i class="bi bi-briefcase"></i> Become a Partner</a>
+      {% if b2b_enabled %}<a href="{{ url_for('main.become_distributor') }}"><i class="bi bi-briefcase"></i> Become a Partner</a>{% endif %}
       <a href="{{ url_for('auth.logout') }}"><i class="bi bi-box-arrow-right"></i> Logout</a>
     </nav>
   </aside>

@@ -1,4 +1,4 @@
-from flask import Blueprint, abort, flash, redirect, render_template, request, send_file, url_for
+from flask import Blueprint, abort, current_app, flash, redirect, render_template, request, send_file, url_for
 from flask_login import current_user, login_required
 
 from ..extensions import db
@@ -7,6 +7,14 @@ from ..models import Order, OrderStatus, PartnerCustomer, Role, SupportTicket
 from ..services.invoice_service import generate_invoice_pdf
 
 b2b_bp = Blueprint("b2b", __name__, url_prefix="")
+
+
+
+@b2b_bp.before_request
+def _b2b_switch():
+    if not current_app.config.get("B2B_ENABLED"):
+        abort(404)
+
 
 CONTEXT = {
     Role.DISTRIBUTOR: {"prefix": "distributor", "title": "Distributor Portal", "role": Role.DISTRIBUTOR},

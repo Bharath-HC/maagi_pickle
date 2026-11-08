@@ -62,6 +62,8 @@ def login():
         user = User.query.filter((User.email == identifier) | (User.phone == form.identifier.data.strip())).first()
         if not user:
             flash("No account found with those details.", "danger")
+        elif user.role in (Role.DISTRIBUTOR, Role.WHOLESALER) and not current_app.config.get("B2B_ENABLED"):
+            flash("Distributor and Wholesaler logins are not available right now.", "warning")
         elif user.is_locked:
             flash("This account is temporarily locked due to repeated failed attempts. Try again later.", "danger")
         elif not user.is_active:

@@ -50,6 +50,11 @@ class BaseConfig:
     ALLOW_PAYMENT_SIMULATION = _bool("ALLOW_PAYMENT_SIMULATION", True)
     PAYMENT_TIMEOUT_MINUTES = 30
 
+    # Distributor / Wholesaler portals. All the code stays in place; this flag only
+    # switches public access (login, partner applications, nav links, dashboards).
+    # Set B2B_ENABLED=true in the environment to bring the portals back.
+    B2B_ENABLED = _bool("B2B_ENABLED", False)
+
     MAIL_SERVER = os.getenv("MAIL_SERVER", "")
     MAIL_PORT = int(os.getenv("MAIL_PORT", "587") or 587)
     MAIL_USERNAME = os.getenv("MAIL_USERNAME", "")
@@ -79,6 +84,7 @@ class DevelopmentConfig(BaseConfig):
 
 class TestingConfig(BaseConfig):
     TESTING = True
+    B2B_ENABLED = True
     SQLALCHEMY_DATABASE_URI = "sqlite://"
     WTF_CSRF_ENABLED = False
     ALLOW_PAYMENT_SIMULATION = True

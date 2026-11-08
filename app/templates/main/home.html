@@ -2,6 +2,15 @@
 {% block content %}
 
 <section class="hero">
+  <div class="hero-particles" aria-hidden="true">
+    <span class="p-red"   style="left:6%;  top:18%; width:22px; height:22px; --dur:13s; --dx:40px;  --dy:-70px;"></span>
+    <span class="p-gold"  style="left:44%; top:8%;  width:16px; height:16px; --dur:17s; --dx:-30px; --dy:60px; --del:-3s;"></span>
+    <span class="p-green" style="left:30%; top:78%; width:26px; height:26px; --dur:15s; --dx:50px;  --dy:-50px; --del:-6s;"></span>
+    <span class="p-red"   style="left:92%; top:12%; width:14px; height:14px; --dur:12s; --dx:-40px; --dy:50px; --del:-2s; --blur:1px;"></span>
+    <span class="p-gold"  style="left:70%; top:86%; width:30px; height:30px; --dur:19s; --dx:-60px; --dy:-40px; --del:-8s; --blur:2px;"></span>
+    <span class="p-green" style="left:2%;  top:60%; width:12px; height:12px; --dur:11s; --dx:30px;  --dy:-60px; --del:-5s;"></span>
+    <span class="p-red"   style="left:55%; top:50%; width:10px; height:10px; --dur:16s; --dx:20px;  --dy:-30px; --del:-9s;"></span>
+  </div>
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
@@ -14,16 +23,52 @@
         </div>
       </div>
       <div class="col-lg-6">
-        <img src="{{ url_for('static', filename='images/banners/hero-portrait.webp') }}" class="hero-img" alt="Maagi Pickle jars">
+        <div class="hero-scene">
+          <div class="hero-stage">
+            <img src="{{ url_for('static', filename='images/banners/hero-portrait.webp') }}" class="hero-img" alt="Maagi Pickle jars">
+            <span class="float-chip float-chip--1"><i class="bi bi-patch-check-fill"></i> Since 2001</span>
+            <span class="float-chip float-chip--2"><i class="bi bi-fire"></i> Traditional recipes</span>
+            <span class="float-chip float-chip--3"><i class="bi bi-truck"></i> Delivered across India</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 </section>
 
+{% if featured and featured|length >= 3 %}
+<section class="section range-section">
+  <div class="container">
+    <div class="section-heading" data-reveal>
+      <p class="section-eyebrow">Explore the Range</p>
+      <h2>Spin Through Our Pickles</h2>
+    </div>
+    <div class="range-stage">
+      <div class="range-ring">
+        {% for product in featured[:8] %}
+        <a class="range-item" href="{{ url_for('products.detail', slug=product.slug) }}">
+          <img src="{{ url_for('static', filename=product.primary_image) if product.primary_image else url_for('static', filename='images/branding/maagi-logo.webp') }}" alt="{{ product.name }}" draggable="false">
+          <div>
+            <h4>{{ product.name }}</h4>
+            {% if product.active_variants %}<small>from {{ variant_price(product.active_variants[0], role)|rupees }}</small>{% endif %}
+          </div>
+        </a>
+        {% endfor %}
+      </div>
+      <div class="range-floor"></div>
+    </div>
+    <div class="range-controls">
+      <button class="range-btn" type="button" data-ring="prev" aria-label="Previous"><i class="bi bi-chevron-left"></i></button>
+      <button class="range-btn" type="button" data-ring="next" aria-label="Next"><i class="bi bi-chevron-right"></i></button>
+    </div>
+  </div>
+</section>
+{% endif %}
+
 {% if featured %}
 <section class="section">
   <div class="container">
-    <div class="section-heading">
+    <div class="section-heading" data-reveal>
       <p class="section-eyebrow">Fan Favourites</p>
       <h2>Featured Products</h2>
     </div>
@@ -40,34 +85,34 @@
 
 <section class="section section--soft">
   <div class="container">
-    <div class="section-heading">
+    <div class="section-heading" data-reveal>
       <p class="section-eyebrow">Why Maagi</p>
       <h2>Crafted the Traditional Way</h2>
     </div>
     <div class="row g-4">
       <div class="col-md-6 col-lg-3">
-        <div class="feature-card">
+        <div class="feature-card" data-tilt="10" data-reveal>
           <i class="bi bi-flower2"></i>
           <h5>Traditional Taste</h5>
           <p>Recipes passed down through generations, true to authentic Indian flavour.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
-        <div class="feature-card">
+        <div class="feature-card" data-tilt="10" data-reveal>
           <i class="bi bi-basket2"></i>
           <h5>Quality Ingredients</h5>
           <p>Carefully sourced spices, oils and produce for consistent quality in every jar.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
-        <div class="feature-card">
+        <div class="feature-card" data-tilt="10" data-reveal>
           <i class="bi bi-droplet-half"></i>
           <h5>Hygienic Preparation</h5>
           <p>Prepared in a clean, controlled environment following strict hygiene practices.</p>
         </div>
       </div>
       <div class="col-md-6 col-lg-3">
-        <div class="feature-card">
+        <div class="feature-card" data-tilt="10" data-reveal>
           <i class="bi bi-box-seam"></i>
           <h5>Carefully Packed</h5>
           <p>Sealed and packed to preserve freshness from our kitchen to your table.</p>
@@ -80,14 +125,14 @@
 {% if categories %}
 <section class="section">
   <div class="container">
-    <div class="section-heading">
+    <div class="section-heading" data-reveal>
       <p class="section-eyebrow">Browse</p>
       <h2>Product Categories</h2>
     </div>
     <div class="row g-4">
       {% for cat in categories %}
       <div class="col-6 col-md-4 col-lg-2">
-        <a href="{{ url_for('products.catalog', category=cat.id) }}" class="category-card">
+        <a href="{{ url_for('products.catalog', category=cat.id) }}" class="category-card" data-tilt="8" data-reveal>
           <img src="{{ url_for('static', filename=cat.image) if cat.image else url_for('static', filename='images/categories/specialty.webp') }}" alt="{{ cat.name }}">
           <span>{{ cat.name }}</span>
         </a>
@@ -102,7 +147,7 @@
   <div class="container">
     <div class="row align-items-center g-5">
       <div class="col-lg-6">
-        <img src="{{ url_for('static', filename='images/banners/brand-story.webp') }}" class="rounded-4 w-100" alt="Maagi Pickle tradition">
+        <img src="{{ url_for('static', filename='images/banners/brand-story.webp') }}" class="rounded-4 w-100" alt="Maagi Pickle tradition" data-tilt="5" data-reveal="left" style="position:relative">
       </div>
       <div class="col-lg-6">
         <p class="section-eyebrow">Our Heritage</p>
@@ -117,32 +162,32 @@
 <section class="section b2b-cta">
   <div class="container text-center">
     <h2>Looking for Bulk Supply?</h2>
-    <p>We partner with Restaurants, Hotels, Retailers, Wholesalers and Distributors across India.</p>
-    <a href="{{ url_for('main.become_distributor') }}" class="btn btn-light btn-lg">BECOME A BUSINESS PARTNER</a>
+    <p>We supply Restaurants, Hotels, Retailers and events across India. Tell us what you need and we'll send a quote.</p>
+    <a href="{{ url_for('main.bulk_orders') }}" class="btn btn-light btn-lg">REQUEST A BULK QUOTE</a>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="section-heading">
+    <div class="section-heading" data-reveal>
       <p class="section-eyebrow">Testimonials</p>
       <h2>What Our Customers Say</h2>
     </div>
     <div class="row g-4">
       <div class="col-md-4">
-        <div class="testimonial-card">
+        <div class="testimonial-card" data-tilt="6" data-reveal>
           <p>"Reminds me exactly of the pickles my grandmother used to make. The lemon chilli is a staple in our home now."</p>
           <div class="testimonial-author">— Ananya R., Bengaluru</div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="testimonial-card">
+        <div class="testimonial-card" data-tilt="6" data-reveal>
           <p>"We stock Maagi Pickle at our restaurant — consistent quality and our customers keep asking for it by name."</p>
           <div class="testimonial-author">— Suresh K., Restaurant Owner</div>
         </div>
       </div>
       <div class="col-md-4">
-        <div class="testimonial-card">
+        <div class="testimonial-card" data-tilt="6" data-reveal>
           <p>"Great packaging, fresh taste, and the dry fruit pickle is unlike anything else we've tried."</p>
           <div class="testimonial-author">— Meera P., Hyderabad</div>
         </div>

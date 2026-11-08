@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from flask import Blueprint, Response, current_app, flash, redirect, render_template, request, url_for
+from flask import Blueprint, Response, abort, current_app, flash, redirect, render_template, request, url_for
 from flask_login import current_user, login_required
 
 from ..extensions import db
@@ -78,6 +78,8 @@ def bulk_orders():
 @main_bp.route("/become-a-wholesaler", methods=["GET", "POST"], endpoint="become_wholesaler")
 @login_required
 def become_partner():
+    if not current_app.config.get("B2B_ENABLED"):
+        abort(404)
     target_role = Role.DISTRIBUTOR if request.endpoint.endswith("distributor") else Role.WHOLESALER
     model = DistributorApplication if target_role == Role.DISTRIBUTOR else WholesalerApplication
 

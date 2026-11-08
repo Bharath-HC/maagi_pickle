@@ -20,6 +20,9 @@
                 </label>
               {% endfor %}
             </div>
+            {% if form.login_as.errors %}
+            <div class="alert alert-warning py-2 small">Distributor and Wholesaler logins are not available right now. Please log in as Customer or Admin.</div>
+            {% endif %}
             <div class="mb-3">
               {{ form.identifier.label(class="form-label") }}
               {{ form.identifier(class="form-control" + (" is-invalid" if form.identifier.errors else "")) }}
@@ -41,7 +44,7 @@
           </form>
           <p class="text-center small mt-3 mb-0">New to Maagi? <a href="{{ url_for('auth.register') }}">Create an account</a></p>
           <div class="demo-hint mt-3">
-            <strong>Demo accounts</strong> (see README): admin@maagi.local · distributor@maagi.local · wholesaler@maagi.local · customer@maagi.local
+            <strong>Demo accounts</strong> (see README): admin@maagi.local · customer@maagi.local
           </div>
         </div>
       </div>
